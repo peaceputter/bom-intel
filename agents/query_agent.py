@@ -1,25 +1,36 @@
-#import google.generativeai as genai
-#from config import GEMINI_API_KEY
+import os
+from google import genai
 
-#genai.configure(api_key=GEMINI_API_KEY)
-#model = genai.GenerativeModel("gemini-1.5-flash")
 
 def rewrite_query(user_query):
-#    prompt = f"""
-#You are an electronics engineer.
+    api_key = os.getenv("GEMINI_API_KEY")
 
-#Convert the user query into a precise component search query.
+    if not api_key:
+        return user_query
 
-#Examples:
-#- "fast charging chip" → "USB PD controller 60W"
-#- "gaming RAM" → "LPDDR5 6400 8GB"
+    try:
+        client = genai.Client(api_key=api_key)
 
-#User query: {user_query}
+        prompt = f"""
+You are an electronics engineer.
 
-#Return ONLY the improved search query.
-#"""
+Convert the user query into a precise component search query.
 
- #   try:
- #       return model.generate_content(prompt).text.strip()
- #   except:
+Examples:
+- fast charging chip → USB PD controller 60W
+- gaming RAM → LPDDR5 6400 8GB
+
+User query: {user_query}
+
+Return ONLY the improved search query.
+"""
+
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt,
+        )
+
+        return response.text.strip()
+
+    except Exception:
         return user_query
