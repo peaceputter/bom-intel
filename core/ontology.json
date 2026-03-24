@@ -1,0 +1,8 @@
+{
+  "Compute": ["SoC", "RAM", "Storage"],
+  "Power": ["Battery", "Charging IC", "PMIC", "Protection IC"],
+  "Display": ["Panel", "Display Driver", "Touch Controller"],
+  "Connectivity": ["WiFi Module", "Bluetooth", "Antenna"],
+  "Mechanical": ["Enclosure", "Thermal"],
+  "Support": ["Crystal", "Connector", "ESD Protection"]
+}
