@@ -1,4 +1,4 @@
 import streamlit as st
 
-OCTOPART_API_KEY = st.secrets["OCTOPART_API_KEY"]
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+MOUSER_API_KEY = st.secrets.get("MOUSER_API_KEY", "")
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "")
