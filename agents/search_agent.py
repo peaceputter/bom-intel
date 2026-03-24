@@ -1,4 +1,5 @@
-from connectors.octopart import search_components
+from connectors.free_search import free_search
+from config import MOUSER_API_KEY
 
 def run_search(query):
-    return search_components(query)
+    return free_search(query, MOUSER_API_KEY)
