@@ -1,27 +1,38 @@
-#import google.generativeai as genai
-#from config import GEMINI_API_KEY
+import os
+from google import genai
 
-#genai.configure(api_key=GEMINI_API_KEY)
-#model = genai.GenerativeModel("gemini-1.5-flash")
 
 def extract_specs(query):
-#    prompt = f"""
-#Extract structured specs from this component query.
+    api_key = os.getenv("GEMINI_API_KEY")
 
-#Query: {query}
+    if not api_key:
+        return {"error": "Missing GEMINI_API_KEY"}
 
-#Return JSON with:
-#- category
-#- power
-#- voltage
-#- interface
-#- notes
+    try:
+        client = genai.Client(api_key=api_key)
 
-#If unknown, keep null.
-#"""
+        prompt = f"""
+Extract structured specs from this component query.
 
-#    try:
-#        response = model.generate_content(prompt).text
-        return "response_text"
-#    except Exception as e:
-#        return f"Spec extraction error: {e}"
+Query: {query}
+
+Return JSON with:
+- category
+- size
+- power
+- voltage
+- interface
+- notes
+
+If unknown, keep null.
+"""
+
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt,
+        )
+
+        return response.text
+
+    except Exception as e:
+        return {"error": str(e)}
