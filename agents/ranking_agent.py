@@ -1,31 +1,40 @@
-#import google.generativeai as genai
-#from config import GEMINI_API_KEY
+import os
+from google import genai
 
-#genai.configure(api_key=GEMINI_API_KEY)
-
-#model = genai.GenerativeModel("gemini-1.5-flash")
 
 def rank(query, components):
-#    prompt = f"""
-#You are an expert electronics sourcing engineer.
+    api_key = os.getenv("GEMINI_API_KEY")
 
-#User query: {query}
+    if not api_key:
+        return "Missing GEMINI_API_KEY"
 
-#Components:
-#{components}
+    try:
+        client = genai.Client(api_key=api_key)
 
-#Rules:
-#- Only use given components
-#- Pick best 3
-#- Explain why
-#- Mention sourcing advantages
-#- Be concise and practical
+        prompt = f"""
+You are an expert electronics sourcing engineer.
 
-#Output clearly.
-#"""
+User query: {query}
 
-#    try:
-#        response = model.generate_content(prompt)
-        return "response_text"
-#    except Exception as e:
-#        return f"LLM Error: {e}"
+Components:
+{components}
+
+Rules:
+- Only use given components
+- Pick best 3
+- Explain why
+- Mention sourcing advantages
+- Be concise
+
+Return clean readable output.
+"""
+
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt,
+        )
+
+        return response.text
+
+    except Exception as e:
+        return f"LLM Error: {e}"
